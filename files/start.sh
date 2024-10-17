@@ -39,8 +39,8 @@ expressvpn connect $SERVER || exit
 
 for i in $(echo $WHITELIST_DNS | sed "s/ //g" | sed "s/,/ /g")
 do
-    iptables -A xvpn_dns_ip_exceptions -d ${i}/32 -p udp -m udp --dport 53 -j ACCEPT
-    echo "allowing dns server traffic in iptables: ${i}"
+    iptables -A xvpn_dns_ip_exceptions -o tun0 -d ${i}/32 -p udp -m udp --dport 53 -j ACCEPT
+    echo "Added iptables rule to allow outbound DNS server traffic on tun0 interface for: ${i}"
 done
 
 exec "$@"
